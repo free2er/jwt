@@ -1,0 +1,50 @@
+{
+    "name": "free2er/jwt",
+    "description": "JWT tools",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Max Pryakhin",
+            "email": "m.pryakhin@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Free2er\\Jwt\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Free2er\\Jwt\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^7.4",
+        "ext-gmp": "*",
+        "ext-openssl": "*",
+        "ext-sodium": "*",
+        "free2er/ed25519": "^1.0",
+        "nesbot/carbon": "^2.31",
+        "web-token/jwt-checker": "^2.1",
+        "web-token/jwt-core": "^2.1",
+        "web-token/jwt-key-mgmt": "^2.1",
+        "web-token/jwt-signature": "^2.1",
+        "web-token/jwt-signature-algorithm-ecdsa": "^2.1",
+        "web-token/jwt-signature-algorithm-eddsa": "^2.1",
+        "web-token/jwt-signature-algorithm-hmac": "^2.1",
+        "web-token/jwt-signature-algorithm-none": "^2.1",
+        "web-token/jwt-signature-algorithm-rsa": "^2.1"
+    },
+    "require-dev": {
+        "free2er/coding-standard": "^1.1",
+        "phpunit/phpunit": "^8.5"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "lint": "vendor/bin/phpcs",
+        "test": "vendor/bin/phpunit"
+    }
+}

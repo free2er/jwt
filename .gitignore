@@ -1,0 +1,23 @@
+# System Files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.idea
+.vscode
+
+# Docker
+/docker-compose.override.yaml
+
+# Composer
+/composer.phar
+/vendor/
+
+# PHP CodeSniffer
+/.phpcs-cache
+/phpcs.xml
+
+# PHPUnit
+/.phpunit
+/.phpunit.result.cache
+/phpunit.xml
