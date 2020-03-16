@@ -85,7 +85,7 @@ class KeyFactory
             $key = substr($key, strlen($this->filePrefix));
         }
 
-        if (is_file($key)) {
+        if (strpos($key, DIRECTORY_SEPARATOR) === 0 && is_file($key)) {
             $key = @file_get_contents($key) ?: $key;
         }
 

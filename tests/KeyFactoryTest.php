@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Free2er\Jwt;
 
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 /**
  * Тест фабрики JWK
@@ -194,20 +195,20 @@ class KeyFactoryTest extends TestCase
 
     /**
      * Проверяет создание ключей HMAC
+     *
+     * @throws Throwable
      */
     public function testHmacKey(): void
     {
-        $secret = '123456789012345678901234';
-
-        $key = $this->factory->create($secret);
+        $key = $this->factory->create(random_bytes(32));
         $this->assertEquals('oct', $key->get('kty'));
         $this->assertEquals('HS256', $key->get('alg'));
         $this->assertTrue($key->has('k'));
 
-        $key = $this->factory->create($secret . $secret);
+        $key = $this->factory->create(random_bytes(48));
         $this->assertEquals('HS384', $key->get('alg'));
 
-        $key = $this->factory->create($secret . $secret . $secret);
+        $key = $this->factory->create(random_bytes(64));
         $this->assertEquals('HS512', $key->get('alg'));
     }
 
