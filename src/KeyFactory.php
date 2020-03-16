@@ -6,7 +6,6 @@ namespace Free2er\Jwt;
 
 use Base64Url\Base64Url;
 use Free2er\Ed25519\Key as Ed25519Factory;
-use Free2er\Jwt\Exception\KeyException;
 use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\Core\JWK;
 use Jose\Component\KeyManagement\JWKFactory;
@@ -32,6 +31,13 @@ class KeyFactory
     private JWK $defaultKey;
 
     /**
+     * Префикс файла
+     *
+     * @var string
+     */
+    private string $filePrefix;
+
+    /**
      * Возвращает допустимые алгоритмы шифрования
      *
      * @return AlgorithmManager
@@ -52,11 +58,13 @@ class KeyFactory
     /**
      * Конструктор
      *
-     * @param JWK|null $defaultKey
+     * @param JWK|null    $defaultKey
+     * @param string|null $filePrefix
      */
-    public function __construct(JWK $defaultKey = null)
+    public function __construct(JWK $defaultKey = null, string $filePrefix = null)
     {
         $this->defaultKey = $defaultKey ?: JWKFactory::createNoneKey();
+        $this->filePrefix = $filePrefix ?: 'file://';
     }
 
     /**
@@ -66,13 +74,19 @@ class KeyFactory
      * @param string|null $password
      *
      * @return JWK
-     *
-     * @throws KeyException
      */
     public function create(string $key = null, string $password = null): JWK
     {
         if ($key === null) {
             return $this->defaultKey;
+        }
+
+        if (strpos($key, $this->filePrefix) === 0) {
+            $key = substr($key, strlen($this->filePrefix));
+        }
+
+        if (is_file($key)) {
+            $key = @file_get_contents($key) ?: $key;
         }
 
         if (!$openssl = openssl_pkey_get_private($key, (string) $password)) {
@@ -83,19 +97,15 @@ class KeyFactory
             return $this->createHmacKey($key);
         }
 
-        $type = openssl_pkey_get_details($openssl) ?? null;
+        $type = openssl_pkey_get_details($openssl)['type'] ?? null;
         openssl_pkey_free($openssl);
 
-        try {
-            switch ($type) {
-                case OPENSSL_KEYTYPE_RSA:
-                    return $this->createRsaKey($key, $password);
+        switch ($type) {
+            case OPENSSL_KEYTYPE_RSA:
+                return $this->createRsaKey($key, $password);
 
-                case OPENSSL_KEYTYPE_EC:
-                    return $this->createEcKey($key, $password);
-            }
-        } catch (Throwable $exception) {
-            throw KeyException::wrap($exception);
+            case OPENSSL_KEYTYPE_EC:
+                return $this->createEcKey($key, $password);
         }
 
         try {
@@ -173,12 +183,12 @@ class KeyFactory
         $d = $key->getPrivateKey();
         $x = $key->getPublicKey();
 
-        return new JWK([
+        return new JWK(array_filter([
             'kty' => 'OKP',
             'alg' => 'EdDSA',
             'crv' => 'Ed25519',
             'd'   => $d ? Base64Url::encode($d) : null,
             'x'   => Base64Url::encode($x),
-        ]);
+        ]));
     }
 }
