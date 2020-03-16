@@ -90,7 +90,7 @@ class TokenFactory
 
         $headers = [
             'typ' => 'JWT',
-            'alg' => $key->get('alg')
+            'alg' => $key->get('alg'),
         ];
 
         $token = $this->builder

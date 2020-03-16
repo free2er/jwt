@@ -88,6 +88,8 @@ class TokenValidator
      * @param string      $token
      * @param string|null $key
      * @param string|null $password
+     *
+     * @throws ValidatorException
      */
     public function validate(string $token, string $key = null, string $password = null): void
     {
