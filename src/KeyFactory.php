@@ -135,9 +135,12 @@ class KeyFactory
                 $algorithm = 'HS384';
                 break;
 
-            default:
+            case $length >= 32:
                 $algorithm = 'HS256';
                 break;
+
+            default:
+                return $this->defaultKey;
         }
 
         return JWKFactory::createFromSecret($secret, ['alg' => $algorithm]);

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7ae00965d8d3e898e0b544f346c5bbe",
+    "content-hash": "05c2021377ef2a3817dc07de4cb8ad22",
     "packages": [
         {
             "name": "fgrosse/phpasn1",
@@ -2876,6 +2876,7 @@
     "platform": {
         "php": "^7.4",
         "ext-gmp": "*",
+        "ext-json": "*",
         "ext-openssl": "*",
         "ext-sodium": "*"
     },

@@ -99,11 +99,7 @@ class TokenValidator
             throw ValidatorException::parse($exception);
         }
 
-        try {
-            $payload = JsonConverter::decode($token->getPayload());
-        } catch (Throwable $exception) {
-            throw ValidatorException::parse($exception);
-        }
+        $payload = JsonConverter::decode($token->getPayload());
 
         if (!$payload || !is_array($payload)) {
             throw ValidatorException::parse();
@@ -117,13 +113,7 @@ class TokenValidator
 
         $key = $this->keyFactory->create($key, $password);
 
-        try {
-            $verified = $this->verifier->verifyWithKey($token, $key, 0);
-        } catch (Throwable $exception) {
-            throw ValidatorException::signature($exception);
-        }
-
-        if (!$verified) {
+        if (!$verified = $this->verifier->verifyWithKey($token, $key, 0)) {
             throw ValidatorException::signature();
         }
     }
